@@ -47,9 +47,9 @@ app.use(express.json());
 
 // User registration
 app.post('/register', async (req, res) => {
-    const { id, name, email, password, role = "user" } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
     try {
+        const { id, name, email, password, role = "user" } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
         const query = `
             INSERT INTO users (id, name, email, password, role) 
             VALUES (?, ?, ?, ?, ?);
@@ -63,8 +63,8 @@ app.post('/register', async (req, res) => {
 
 // User login
 app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
     try {
+        const { email, password } = req.body;
         const user = await db.get("SELECT * FROM users WHERE email = ?", [email]);
         if (!user) {
             res.status(400).send("Invalid email");
@@ -82,99 +82,138 @@ app.post('/login', async (req, res) => {
     }
 });
 
-
-app.get('/users',authenticateToken,async(req,res)=>{
-    const query=`select * from users;`
-    const ans = await db.all(query)
-    res.send(ans)
-})
-
-app.get('/blogs-view',authenticateToken,async(req,res)=>{
-    const query=`select * from blogs;`
-    const ans = await db.all(query)
-    res.send(ans)
-})
-
-app.post('/blogs',authenticateToken,async(req,res)=>{
-    const {title, content, editor_id}=req.body
-    const {email}=req
-    const q=`select * from users where email=?;`
-    const userObj= await db.get(q,[`${email}`]);
-    const role=userObj.role
-    if (role==="admin"){
-        const query=`insert into blogs (title, content, editor_id) values (?, ?, ?);`
-        await db.run(query,[title, content, editor_id])
-        res.send('Blog created Successfully')
+// Fetch all users
+app.get('/users', authenticateToken, async (req, res) => {
+    try {
+        const query = `SELECT * FROM users;`;
+        const ans = await db.all(query);
+        res.send(ans);
+    } catch (error) {
+        res.status(500).send(`Error: ${error.message}`);
     }
-    else{
-        res.send("Admin Only can post blogs");
-    }
-})
+});
 
-app.put('/blogs/:id',authenticateToken,async(req,res)=>{
-    const {id}=req.params
-    const queryBlog=`select * from blogs where id=${id};`
-    const blogDetail=await db.get(queryBlog)
-    const blogEditorId=blogDetail.editor_id
-    const {title, content, editor_id}=req.body
-    const {email}=req
-    const q=`select * from users where email=?;`
-    const userObj= await db.get(q,[`${email}`]);
-    const role=userObj.role
-    const userId=userObj.id
-    if (role==="admin" || userId===blogEditorId){
-        const query=`update blogs set title=?, content=?,editor_id=? where id=?;`
-        await db.run(query,[title, content, editor_id,id])
-        res.send('Blog updated Successfully')
+// Fetch all blogs
+app.get('/blogs-view', authenticateToken, async (req, res) => {
+    try {
+        const query = `SELECT * FROM blogs;`;
+        const ans = await db.all(query);
+        res.send(ans);
+    } catch (error) {
+        res.status(500).send(`Error: ${error.message}`);
     }
-    else{
-        res.send("Admin Only can post blogs");
-    }
-})
+});
 
-app.delete('/blogs/:id',authenticateToken,async(req,res)=>{
-    const {id}=req.params
-    const {email}=req
-    const q=`select * from users where email=?;`
-    const userObj= await db.get(q,[`${email}`]);
-    const role=userObj.role
-    if (role==="admin"){
-        const query=`delete from blogs where id=?;`
-        await db.run(query,[id])
-        res.send('Blog deleted Successfully')
-    }
-    else{
-        res.send("Admin Only can post blogs");
-    }
-})
+// Create a blog
+app.post('/blogs', authenticateToken, async (req, res) => {
+    try {
+        const { title, content, editor_id } = req.body;
+        const { email } = req;
+        const q = `SELECT * FROM users WHERE email=?;`;
+        const userObj = await db.get(q, [`${email}`]);
+        const role = userObj.role;
 
-app.get('/comments/:id',authenticateToken,async(req,res)=>{
-    const {id}=req.params
-    const query=`select * from comments where blog_id=?;`
-    const ans = await db.all(query,[id])
-    res.send(ans)
-})
-
-app.post('/comment-blog/:id',authenticateToken,async(req,res)=>{
-    const {id}=req.params
-    const {content}=req.body
-    const {email}=req
-    const q=`select * from users where email=?;`
-    const userObj= await db.get(q,[`${email}`]);
-    const userId=userObj.id
-    try{
-        const query=`insert into comments (blog_id,user_id, content) values (?, ?, ?);`
-        await db.run(query,[id, userId, content])
-        res.send('Comment created to blog')
+        if (role === "admin") {
+            const query = `INSERT INTO blogs (title, content, editor_id) VALUES (?, ?, ?);`;
+            await db.run(query, [title, content, editor_id]);
+            res.send('Blog created Successfully');
+        } else {
+            res.status(403).send("Admin Only can post blogs");
+        }
+    } catch (error) {
+        res.status(500).send(`Error: ${error.message}`);
     }
-    catch(e){
-        res.send(`DB ERROR: ${e.message}`)
-    }
-})
+});
 
-app.delete('/comments/:id',authenticateToken,async(req,res)=>{
-    const {id}=req.params
-    const q=`delete from comments where id=?;`
-    await db.run(q,[id])
-    res.send("Comment Deleted")
-})
+// Update a blog
+app.put('/blogs/:id', authenticateToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, content, editor_id } = req.body;
+        const { email } = req;
+
+        const queryBlog = `SELECT * FROM blogs WHERE id=?;`;
+        const blogDetail = await db.get(queryBlog, [id]);
+        const blogEditorId = blogDetail?.editor_id;
+
+        const q = `SELECT * FROM users WHERE email=?;`;
+        const userObj = await db.get(q, [`${email}`]);
+        const role = userObj.role;
+        const userId = userObj.id;
+
+        if (role === "admin" || userId === blogEditorId) {
+            const query = `UPDATE blogs SET title=?, content=?, editor_id=? WHERE id=?;`;
+            await db.run(query, [title, content, editor_id, id]);
+            res.send('Blog updated Successfully');
+        } else {
+            res.status(403).send("Admin or the blog editor only can update blogs");
+        }
+    } catch (error) {
+        res.status(500).send(`Error: ${error.message}`);
+    }
+});
+
+// Delete a blog
+app.delete('/blogs/:id', authenticateToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { email } = req;
+
+        const q = `SELECT * FROM users WHERE email=?;`;
+        const userObj = await db.get(q, [`${email}`]);
+        const role = userObj.role;
+
+        if (role === "admin") {
+            const query = `DELETE FROM blogs WHERE id=?;`;
+            await db.run(query, [id]);
+            res.send('Blog deleted Successfully');
+        } else {
+            res.status(403).send("Admin Only can delete blogs");
+        }
+    } catch (error) {
+        res.status(500).send(`Error: ${error.message}`);
+    }
+});
+
+// Fetch comments for a blog
+app.get('/comments/:id', authenticateToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const query = `SELECT * FROM comments WHERE blog_id=?;`;
+        const ans = await db.all(query, [id]);
+        res.send(ans);
+    } catch (error) {
+        res.status(500).send(`Error: ${error.message}`);
+    }
+});
+
+// Add a comment to a blog
+app.post('/comment-blog/:id', authenticateToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { content } = req.body;
+        const { email } = req;
+
+        const q = `SELECT * FROM users WHERE email=?;`;
+        const userObj = await db.get(q, [`${email}`]);
+        const userId = userObj.id;
+
+        const query = `INSERT INTO comments (blog_id, user_id, content) VALUES (?, ?, ?);`;
+        await db.run(query, [id, userId, content]);
+        res.send('Comment created for blog');
+    } catch (error) {
+        res.status(500).send(`Error: ${error.message}`);
+    }
+});
+
+// Delete a comment
+app.delete('/comments/:id', authenticateToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const query = `DELETE FROM comments WHERE id=?;`;
+        await db.run(query, [id]);
+        res.send("Comment Deleted");
+    } catch (error) {
+        res.status(500).send(`Error: ${error.message}`);
+    }
+});

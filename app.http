@@ -3,9 +3,9 @@ POST http://localhost:3000/register
 Content-Type: application/json
 
 {
-    "name": "ramu",
-    "email": "ramu@example.com",
-    "password": "ramu123",
+    "name": "Basu",
+    "email": "basu@example.com",
+    "password": "Basu123",
     "role": "admin"
 }
 
@@ -14,13 +14,13 @@ POST http://localhost:3000/login
 Content-Type: application/json
 
 {
-    "email": "ramu@example.com",
-    "password": "ramu123"
+    "email": "basu@example.com",
+    "password": "Basu123"
 }
 
 ### User Can Create blog who has role admin
 POST http://localhost:3000/blogs
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhbXVAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Mzc2NTY2MTJ9.uMkZNleABIEAxMXk-4fA586OKk9pLT5qP7VA4ar71RQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhc3VAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Mzc2OTU2OTV9.eTXcO31BkInOMxJZXIdU1srgLOkSWGg8RoLtPNeNx2c
 Content-Type: application/json
 
 {
@@ -31,7 +31,7 @@ Content-Type: application/json
 
 ### user can update the blog who has role admin or editor for the perticular blog
 PUT http://localhost:3000/blogs/2
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhbXVAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Mzc2NTY2MTJ9.uMkZNleABIEAxMXk-4fA586OKk9pLT5qP7VA4ar71RQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhc3VAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Mzc2OTU2OTV9.eTXcO31BkInOMxJZXIdU1srgLOkSWGg8RoLtPNeNx2c
 Content-Type: application/json
 
 {
@@ -42,31 +42,31 @@ Content-Type: application/json
 
 ### user can delete blog if he is admin
 DELETE http://localhost:3000/blogs/5
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhbXVAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Mzc2NTY2MTJ9.uMkZNleABIEAxMXk-4fA586OKk9pLT5qP7VA4ar71RQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhc3VAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Mzc2OTU2OTV9.eTXcO31BkInOMxJZXIdU1srgLOkSWGg8RoLtPNeNx2c
 
 ###
 
 GET http://localhost:3000/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhbXVAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Mzc2NTY2MTJ9.uMkZNleABIEAxMXk-4fA586OKk9pLT5qP7VA4ar71RQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhc3VAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Mzc2OTU2OTV9.eTXcO31BkInOMxJZXIdU1srgLOkSWGg8RoLtPNeNx2c
 
 ### Users can only view blogs
 GET http://localhost:3000/blogs-view
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhbXVAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Mzc2NTY2MTJ9.uMkZNleABIEAxMXk-4fA586OKk9pLT5qP7VA4ar71RQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhc3VAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Mzc2OTU2OTV9.eTXcO31BkInOMxJZXIdU1srgLOkSWGg8RoLtPNeNx2c
 
 ### Users can only view comments for blogs
 GET http://localhost:3000/comments/2
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhbXVAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Mzc2NTY2MTJ9.uMkZNleABIEAxMXk-4fA586OKk9pLT5qP7VA4ar71RQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhc3VAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Mzc2OTU2OTV9.eTXcO31BkInOMxJZXIdU1srgLOkSWGg8RoLtPNeNx2c
 
 ### Users can comment for the blogs
 POST http://localhost:3000/comment-blog/2
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhbXVAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Mzc2NTY2MTJ9.uMkZNleABIEAxMXk-4fA586OKk9pLT5qP7VA4ar71RQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhc3VAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Mzc2OTU2OTV9.eTXcO31BkInOMxJZXIdU1srgLOkSWGg8RoLtPNeNx2c
 Content-Type: application/json
 
 {
-  "content": "I love Appening"
+  "content": "I want to join Appening"
 }
 
 ### User can delete their own comment
-DELETE http://localhost:3000/comments/5
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhbXVAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Mzc2NTY2MTJ9.uMkZNleABIEAxMXk-4fA586OKk9pLT5qP7VA4ar71RQ
+DELETE http://localhost:3000/comments/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhc3VAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Mzc2OTU2OTV9.eTXcO31BkInOMxJZXIdU1srgLOkSWGg8RoLtPNeNx2c
 
